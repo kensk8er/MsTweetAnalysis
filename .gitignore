@@ -1,0 +1,9 @@
+# general
+.idea
+*.pyc
+*~
+*.swp
+.DS_Store
+
+# project specific
+data
