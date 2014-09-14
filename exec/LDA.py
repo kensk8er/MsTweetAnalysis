@@ -1,8 +1,9 @@
 """
 Executable file for LDA (Latent Dirichlet Allocation).
 
-When running this file, 'working directory' need to be specified as Project Root (EnternshipsJobRecommendation).
+When running this file, 'working directory' need to be specified as Project Root (MsTweetAnalysis).
 """
+import logging
 from gensim import corpora
 from gensim.models import LdaModel, TfidfModel
 from util.input import unpickle
@@ -41,67 +42,37 @@ def perform_lda(dictionary, corpus, num_topics, wiki_path=None, passes=1, iterat
     return lda_model, doc_vectors
 
 
-def do_user(num_topics, passes, iterations, chunksize, tfidf):
-    model_name = 'user_'
+def do_lda(num_topics, passes, iterations, chunksize, tfidf):
+    model_name = 'tweets_'
 
     logging.info('Loading user dictionary...')
-    user_dict = corpora.Dictionary.load('data/dictionary/user_(NN).dict')
-    user_corpus = user_dict.corpus
+    dictionary = corpora.Dictionary.load('data/dictionary/tweets.dict')
+    corpus = dictionary.corpus
 
     if tfidf is True:
         logging.info('Computing TF-IDF...')
-        tfidf_model = TfidfModel(user_corpus, normalize=False)
-        user_corpus = tfidf_model[user_corpus]
+        tfidf_model = TfidfModel(corpus, normalize=False)
+        corpus = tfidf_model[corpus]
         logging.info('Transforming the corpus...')
-        user_corpus = [tfidf_model[corpus] for corpus in user_corpus]
+        corpus = [tfidf_model[corpus] for corpus in corpus]
         model_name += 'tfidf_'
 
     logging.info('Performing LDA on user corpus...')
-    user_lda, user_vectors = perform_lda(dictionary=user_dict, corpus=user_corpus, num_topics=num_topics, passes=passes,
-                                         iterations=iterations, chunksize=chunksize)
-    user_lda.print_topics(topics=num_topics, topn=10)
-    user_lda.save('data/feature/lda/model/' + model_name + str(num_topics) + '.lda')
-    enpickle(user_vectors, 'data/feature/lda/' + model_name + str(num_topics) + '.pkl')
-
-
-def do_job(num_topics, passes, iterations, chunksize, tfidf):
-    model_name = 'job_'
-
-    logging.info('Loading job dictionary...')
-    job_dict = corpora.Dictionary.load('data/dictionary/job_(NN).dict')
-    job_corpus = job_dict.corpus
-
-    if tfidf is True:
-        logging.info('Computing TF-IDF...')
-        tfidf_model = TfidfModel(job_corpus, normalize=False)
-        job_corpus = tfidf_model[job_corpus]
-        logging.info('Transforming the corpus...')
-        job_corpus = [tfidf_model[corpus] for corpus in job_corpus]
-        model_name += 'tfidf_'
-
-    logging.info('Performing LDA on job corpus...')
-    job_lda, job_vectors = perform_lda(dictionary=job_dict, corpus=job_corpus, num_topics=num_topics, passes=passes,
-                                       iterations=iterations, chunksize=chunksize)
-    job_lda.print_topics(topics=num_topics, topn=10)
-    job_lda.save('data/feature/lda/model/' + model_name + str(num_topics) + '.lda')
-    enpickle(job_vectors, 'data/feature/lda/' + model_name + str(num_topics) + '.pkl')
+    model, vectors = perform_lda(dictionary=dictionary, corpus=corpus, num_topics=num_topics, passes=passes,
+                                 iterations=iterations, chunksize=chunksize)
+    model.print_topics(topics=num_topics, topn=10)
+    model.save('data/model/' + model_name + str(num_topics) + '.lda')
+    enpickle(vectors, 'data/vector/' + model_name + str(num_topics) + '.pkl')
 
 
 if __name__ == '__main__':
     # parameters
-    user = True
-    job = False
-    user_num_topics = 5
-    job_num_topics = 30
+    num_topics = 100
     passes = 2
     iterations = 50
     chunksize = 2000
-    tfidf = False
 
     # logging
-    logging = configure_log(__file__)
+    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.DEBUG)
 
-    if user is True:
-        do_user(num_topics=user_num_topics, passes=passes, iterations=iterations, chunksize=chunksize, tfidf=tfidf)
-    if job is True:
-        do_job(num_topics=job_num_topics, passes=passes, iterations=iterations, chunksize=chunksize, tfidf=tfidf)
+    do_lda(num_topics=num_topics, passes=passes, iterations=iterations, chunksize=chunksize, tfidf=None)
