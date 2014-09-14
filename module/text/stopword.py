@@ -2,14 +2,13 @@
 Self defined domain-specific stop-word list.
 """
 from sklearn.feature_extraction import stop_words
-from util.input import unpickle
 
 __author__ = 'kensk8er'
 
 # TODO: create stopword list for countries
 
 # stopwords common for both users and jobs (derived from open source google code, + self-define)
-common_stopwords = stop_words.ENGLISH_STOP_WORDS.union(
+stopwords = stop_words.ENGLISH_STOP_WORDS.union(
     {'ll', 've', 'a', "a's", 'able', 'about', 'above', 'abroad', 'abst', 'accordance', 'according',
      'accordingly', 'across', 'act', 'actually', 'added', 'adj', 'adopted', 'affected', 'affecting',
      'affects', 'after', 'afterwards', 'again', 'against', 'ago', 'ah', 'ahead', "ain", 'all', 'allow',
@@ -105,73 +104,4 @@ common_stopwords = stop_words.ENGLISH_STOP_WORDS.union(
      'calendar', 'confirmation', 'overview', 'yesterday', 'today', 'tomorrow', 'last', 'next', 'previous', 'final',
      'summarize', 'quieter', 'whilst', 'source', 'distribution', 'headline', 'increase', 'right', 'refer', 'fall',
      'short', 'area', 'address', 'paste', 'copy', 'close', 'stop', 'start', 'sender', 'buy', 'sell', 'know', 'first',
-     'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'horsey', 'alice', 'fi', 'tsy', 'cap',
-     'mkts', 'james', 'coxon', 'jim', 'reid', 'john', 'normand', 'jone', 'gareth', 'joseph', 'lavorgna', 'lazzerini',
-     'ettore', 'lee', 'thomas', 'lightowler', 'lin', 'li', 'linan', 'liu', 'louisa', 'lam', 'makino', 'makoto',
-     'stringa', 'mark', 'wall', 'moec', 'mauro', 'spencer', 'tong', 'narminio', 'aurelien', 'nick', 'burn', 'paone',
-     'fabiana', 'perry', 'kojodjojo', 'peter', 'hooper', 'torsten', 'slok', 'sidorov', 'pria', 'bakhshi', 'razzak',
-     'aisha', 'robert', 'mellman', 'sgh', 'advisor', 'saliba', 'nadia', 'sameer', 'goel', 'schmieding', 'holger',
-     'schulz', 'christian', 'seb', 'barker', 'sellwood', 'ross', 'shuyan', 'wu', 'small', 'cameron', 'smalley',
-     'staniford', 'stephen', 'stakhiv', 'sun', 'cfa', 'tellisa', 'clarke', 'teves', 'join', 'tobieson', 'joakim',
-     'tully', 'edel', 'walsh', 'paul', 'wilson', 'peter', 'wolff', 'patrick', 'wood', 'yalcin', 'ekin', 'van',
-     'wagensveld', 'suzan', 'anna', 'zadornova', 'bhanu', 'baweja', 'cynthia', 'cheng', 'emily', 'benn', 'eve', 'raoul',
-     'qi', 'chen', 'wang', 'tao', 'andrew', 'cate', 'angela', 'barber', 'brian', 'boucher', 'prospectus', 'edel',
-     'tully', 'gustavo', 'arteta', 'gyorgy', 'kovacs', 'inigo', 'fraser', 'jenkin', 'jason', 'perl', 'normand',
-     'julien', 'garran', 'larry', 'hatheway', 'loncust', 'manik', 'narain', 'martin', 'lueck', 'nelson', 'ramin',
-     'nakisa', 'reinhard', 'cluse', 'reto', 'huenerwadel', 'stephane', 'deo', 'major', 'william', 'darwin', 'adam',
-     'richardson', 'aditya', 'chordia', 'adrian', 'mowat', 'david', 'aserkoff', 'pedro', 'martin', 'josh', 'klaczek',
-     'sanaya', 'tavaria', 'agata', 'urbanska', 'giner', 'alastair', 'newton', 'alejandro', 'martinez', 'cruz', 'alex',
-     'roever', 'white', 'alexander', 'morozov', 'ander', 'mielsen', 'andre', 'carvalho', 'loes', 'de', 'silva',
-     'arindam', 'sandilya', 'artem', 'biryukov', 'ben', 'laidler', 'benjamin', 'mandel', 'bert', 'lourenco', 'bertrand',
-     'delgado', 'bob', 'janjuah', 'bruce', 'kasman', 'hansley', 'loey', 'lupton', 'warden', 'carsar', 'maasry',
-     'charlene', 'saltzman', 'chris', 'attfield', 'clyde', 'wardle', 'constantin', 'jancso', 'crystal', 'zhao', 'fenn',
-     'grosvenor', 'daragh', 'maher', 'bloom', 'faulkner', 'mackie', 'watt', 'dennis', 'debusschere', 'devendran',
-     'mahendran', 'di', 'luo', 'dick', 'hokenson', 'dilip', 'shahani', 'ed', 'hyman', 'edward', 'morse', 'elise',
-     'badoy', 'elizabeth', 'ernie', 'tedeschi', 'magazine', 'francis', 'khagendra', 'gupta', 'fabio', 'bassi',
-     'fordham', 'tina', 'francesc', 'lleal', 'meggyesi', 'francisco', 'schumacher', 'will', 'frank', 'frederic',
-     'neumann', 'fredrik', 'nerbrand', 'garry', 'evan', 'christou', 'gianluca', 'salford', 'gile', 'patternson',
-     'gordian', 'kemen', 'greg', 'fuzesi', 'han', 'lorenzen', 'howard', 'wen', 'inigo', 'fraser', 'ipreo', 'ivan',
-     'zubo', 'izumi', 'devalier', 'jabaz', 'mathai', 'jae', 'yang', 'jaewoo', 'nakajima', 'james', 'barne', 'pomeroy',
-     'walsh', 'feroli', 'janet', 'henry', 'javier', 'finkman', 'jeanette', 'jenny', 'lai', 'jimmy', 'coonan',
-     'jitendra', 'sriram', 'lomax', 'holly', 'huffman', 'zhu', 'stubbs', 'morgenstern', 'mellman', 'joyce', 'chang',
-     'juan', 'carlos', 'ju', 'karen', 'ward', 'kevin', 'hebner', 'logan', 'krishana', 'guha', 'lan', 'lawrence', 'dyer',
-     'leif', 'eskesen', 'lorena', 'dominguez', 'loui', 'odette', 'ma', 'xiaoping', 'malcolm', 'barr', 'protopapa',
-     'marina', 'valle', 'marjorie', 'hernandez', 'mark', 'diver', 'mcdonald', 'schofield', 'mathilde', 'lemoine',
-     'king', 'matthew', 'dabrowski', 'meera', 'chandan', 'melis', 'metiner', 'mufg', 'murat', 'toprak', 'ulgen',
-     'murray', 'gunn', 'natixis', 'nalin', 'chutchotitham', 'nikolaos', 'panigirtzoglou', 'omfif', 'secretariat',
-     'oscar', 'sloterbeck', 'charlene', 'pablo', 'pankaj', 'mataney', 'bloxham', 'mackel', 'hooper', 'sullivan', 'pin',
-     'ru', 'tan', 'qu', 'hongbin', 'ramiro', 'blazquez', 'raphael', 'brun', 'aguerre', 'ratul', 'roy', 'lynch', 'parke',
-     'robostox', 'ronald', 'man', 'roubini', 'ryan', 'sajjid', 'chinoy', 'sally', 'auld', 'sanaya', 'tavaria', 'mowat',
-     'scott', 'chronert', 'sergio', 'shora', 'haydari', 'simon', 'well', 'stacy', 'antczak', 'cfa', 'su', 'sian', 'lim',
-     'subhrajit', 'banerjee', 'junwei', 'teresa', 'cascino', 'terry', 'haine', 'theologis', 'chapsali', 'tohru',
-     'sasaki', 'trinh', 'nguyen', 'le', 'vicki', 'stern', 'victor', 'fu', 'wai', 'shin', 'chan', 'wietse', 'nijenhuis',
-     'wilson', 'chin', 'xavier', 'botteri', 'yi', 'hu', 'zhi', 'ming', 'zhang', 'brought', 'here', 'about', 'use',
-     'confuse', 'uk', 'united-kingdom', 'sex', 'gender'})
-
-# stopwords for person's names
-name_stopwords = unpickle('data/others/names.pkl')
-
-# stopwords for school names
-# school_stopwords = unpickle('data/others/schools.pkl')
-school_stopwords = set()  # FIXME: school stopwords are not good enough (lots of noise) so excluded for now
-
-# stopwords for school names
-location_stopwords = unpickle('data/others/locations.pkl')
-
-# stopwords for school names
-city_stopwords = unpickle('data/others/cities.pkl')
-
-# stopwords specific for users
-user_stopwords = common_stopwords.union(name_stopwords).union(school_stopwords).union(location_stopwords).union(
-    city_stopwords).union(
-    {'test'})
-
-# stopwords specific for jobs
-job_stopwords = common_stopwords.union(name_stopwords).union(school_stopwords).union(location_stopwords).union(
-    city_stopwords).union(
-    {'nbsp', 'font', 'family', 'arial' 'helvetica', 'san', 'serif', 'color', 'verdana', 'autospace', 'ul', 'li', 'br',
-     'strong', 'table', 'center', 'dd', 'dt', 'dl', 'div', 'ol', 'span', 'td', 'tr', 'th'})
-
-wiki_stopwords = common_stopwords.union(name_stopwords).union(school_stopwords).union(location_stopwords).union(
-    city_stopwords).union(
-    {'test'})
+     'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'})
