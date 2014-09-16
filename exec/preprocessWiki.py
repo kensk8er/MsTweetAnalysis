@@ -2,13 +2,12 @@
 Executable file to generate wikipedia corpus.
 """
 import logging
-from gensim import corpora
 from gensim.utils import lemmatize, revdict
 import pattern
 from pattern.web import Wikipedia
 import re
 from module.text.preprocessing import clean_text, convert_compound
-from module.text.stopword import wiki_stopwords
+from module.text.stopword import stopwords
 from module.wiki.topics import get_keywords
 from util.input import unpickle
 from util.output import enpickle
@@ -66,9 +65,9 @@ if __name__ == '__main__':
     # hyper-parameters
     allowed_pos = re.compile('(NN)')
     crawl = True
-    target = 'user'
-    topic_num = 100
-    model_path = "data/feature/lda/%s_%s.lda" % (target, topic_num)
+    # target = 'user'
+    # topic_num = 100
+    model_path = 'data/model/tweets_100.lda'
 
     # logging
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.DEBUG)
@@ -78,9 +77,6 @@ if __name__ == '__main__':
         wikis = crawl_wiki(model_path=model_path)
     else:
         wikis = unpickle('data/others/wikis.pkl')
-
-    # expand stopwords list
-    stop_words = wiki_stopwords
 
     logging.info('Lemmatizing wikipedia texts...')
     count = 0
@@ -104,7 +100,7 @@ if __name__ == '__main__':
         wiki = convert_compound(wiki)
 
         # filter stop words, long words, and non-english words
-        wiki = [w for w in wiki if not w in stop_words and 2 <= len(w) <= 15 and w.islower()]  # FIXME: this allows non-english characters to be stored
+        wiki = [w for w in wiki if not w in stopwords and 2 <= len(w) <= 15 and w.islower()]  # FIXME: this allows non-english characters to be stored
 
         new_wikis.append(wiki)
         keywords.append(keyword)
@@ -112,17 +108,4 @@ if __name__ == '__main__':
     print '\n'
 
     logging.info('Saving wiki corpus...')
-    enpickle(new_wikis, "data/others/wikis_%s_%s.pkl" % (target, topic_num))
-    # logging.info('Creating dictionary and corpus...')
-    # dictionary = corpora.Dictionary(new_wikis)
-    # dictionary.docid2title = keywords
-    #
-    # logging.info('Filtering unimportant words...')
-    # dictionary.filter_extremes(no_below=1, no_above=0.2, keep_n=None)
-    # dictionary.compactify()
-    #
-    # logging.info('Generating corpus...')
-    # dictionary.corpus = [dictionary.doc2bow(wiki) for wiki in new_wikis]
-    # dictionary.id2token = revdict(dictionary.token2id)
-    #
-    # dictionary.save("data/dictionary/wiki_%s_%s_%s.dict" % (target, topic_num, allowed_pos.pattern))
+    enpickle(new_wikis, 'data/processed/wikis.pkl')
