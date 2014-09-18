@@ -104,4 +104,5 @@ stopwords = stop_words.ENGLISH_STOP_WORDS.union(
      'calendar', 'confirmation', 'overview', 'yesterday', 'today', 'tomorrow', 'last', 'next', 'previous', 'final',
      'summarize', 'quieter', 'whilst', 'source', 'distribution', 'headline', 'increase', 'right', 'refer', 'fall',
      'short', 'area', 'address', 'paste', 'copy', 'close', 'stop', 'start', 'sender', 'buy', 'sell', 'know', 'first',
-     'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'})
+     'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'rt', 'http', 'xx', 'tambi_n', 'en',
+     'xe', 'da'})

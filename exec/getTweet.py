@@ -1,13 +1,11 @@
 import csv
 import re
+from time import sleep
 from module.text.preprocessing import clean_text
-from util.input import unpickle
+from module.wiki.topics import get_keywords
+import twitter
 
 __author__ = 'Linda Wang'
-
-import twitter
-import pandas as pd
-
 
 if __name__ == '__main__':
     file_name = 'data/original/additional.csv'
@@ -20,25 +18,22 @@ if __name__ == '__main__':
         access_token_secret='c0S9NKtzXU9dyRrsVqura0EIzXFBIWro3rvJBkrCdSyJe')
 
     print api.VerifyCredentials()
-    # locations = pd.read_csv(location_file, quotechar='"')
-    # locations['x'] = locations['Latitude/longitude'].str.split(',').apply(lambda x: x[0].strip())
-    # locations['y'] = locations['Latitude/longitude'].str.split(',').apply(lambda x: x[1].strip())
-    # del locations['Latitude/longitude']
 
-    wikis = unpickle('data/others/wikis.pkl')
-    keywords = wikis.keys()
+    # wikis = unpickle('data/others/wikis.pkl')
+    # keywords = wikis.keys()
+    keywords = get_keywords(model_path='data/model/tweets_100.lda')
     tweets = []
-    # for i, row in enumerate(locations.iterrows()):
     for i, keyword in enumerate(keywords):
         try:
             print "{}th done".format(i)
-            # res = api.GetSearch(geocode=(row[1].x, row[1].y, '0.1km'), count=100)
             res = api.GetSearch(term=keyword, lang='english', count=100)
             for tweet in res:
-                # tweets.append(u'{},{},{}'.format(row[1].x, row[1].y, unicode(tweet.AsDict()['text']).replace('\n', '')))
                 tweets.append(unicode(tweet.AsDict()['text']).replace('\n', ''))
         except Exception as e:
             print e
+
+        if i % 150 == 0 and i > 0:
+            sleep(60*15)  # avoid exceeding the API limit
 
     f = open(file_name, 'ab')
     csvWriter = csv.writer(f)

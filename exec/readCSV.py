@@ -16,6 +16,8 @@ if __name__ == '__main__':
     for row in ms_hash_csv:
         id, text = row
         id = 'ms_hash_' + id
+        if len(text) < 10:
+            continue
         if not text_index.has_key(text):
             text_index[text] = ''
             tweets[id] = text
@@ -26,6 +28,8 @@ if __name__ == '__main__':
     for row in ms_loc_csv:
         id, text = row
         id = 'ms_loc_' + id
+        if len(text) < 10:
+            continue
         if not text_index.has_key(text):
             text_index[text] = ''
             tweets[id] = text
@@ -36,6 +40,20 @@ if __name__ == '__main__':
     for row in other_csv:
         id, text = row
         id = 'other_' + id
+        if len(text) < 10:
+            continue
+        if not text_index.has_key(text):
+            text_index[text] = ''
+            tweets[id] = text
+
+    # additional tweets
+    other_file = open('data/original/additional.csv', 'rb')
+    other_csv = csv.reader(other_file)
+    for row in other_csv:
+        id, text = row
+        id = 'additional_' + id
+        if len(text) < 10:
+            continue
         if not text_index.has_key(text):
             text_index[text] = ''
             tweets[id] = text

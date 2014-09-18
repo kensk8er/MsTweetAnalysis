@@ -10,4 +10,4 @@ compound_words = ['jp morgan', 'world cup', 'new zealand', 'saudi arabia', 'hong
                   'south korea', 'north korea', 'barack obama', 'credit card', 'south africa', 'fix income',
                   'north america', 'asset allocation', 'narendra modi', 'gravekal dragonomic', 'health care',
                   'credit suisse', 'lehman brother', 'united states', 'united kingdom', 'new york', 'front end',
-                  'back end', 'web developer', '']
+                  'back end', 'web developer', 'mark spencer']

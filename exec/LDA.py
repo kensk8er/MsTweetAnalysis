@@ -70,10 +70,11 @@ def do_lda(num_topics, passes, iterations, chunksize, tfidf, wiki_path=None):
 if __name__ == '__main__':
     # parameters
     num_topics = 100
-    passes = 2
+    passes = 10
     iterations = 50
     chunksize = 2000
-    wiki_path = 'data/processed/wikis.pkl'
+    # wiki_path = 'data/processed/wikis.pkl'
+    wiki_path = None
 
     # logging
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.DEBUG)
