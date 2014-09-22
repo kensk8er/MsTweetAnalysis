@@ -12,6 +12,14 @@ from util.output import enpickle
 __author__ = 'kensk8er'
 
 
+def get_corpus_ids(corpus_id2orig_id):
+    corpus_ids = []
+    for corpus_id, orig_id in enumerate(corpus_id2orig_id):
+        if 'ms_hash' in orig_id or 'ms_loc' in orig_id:
+            corpus_ids.append(corpus_id)
+    return corpus_ids
+
+
 def perform_lda(dictionary, corpus, num_topics, wiki_path=None, passes=1, iterations=50, chunksize=200):
     """
 
@@ -35,10 +43,14 @@ def perform_lda(dictionary, corpus, num_topics, wiki_path=None, passes=1, iterat
 
     lda_model = LdaModel(corpus=corpus, id2word=dictionary, num_topics=num_topics, passes=passes,
                          iterations=iterations, alpha='auto', chunksize=chunksize)
+    corpus_ids = get_corpus_ids(dictionary.corpus_id2orig_id)
+    # doc_vector_ids = dictionary.corpus_id2orig_id[corpus_ids]
+    doc_vector_ids = [dictionary.corpus_id2orig_id[corpus_id] for corpus_id in corpus_ids]
     doc_vectors = lda_model.inference(corpus)[0]
+    doc_vectors = doc_vectors[corpus_ids, :]
     doc_vectors = doc_vectors / doc_vectors.sum(axis=1).reshape(doc_vectors.shape[0], 1)
 
-    return lda_model, doc_vectors
+    return lda_model, doc_vectors, doc_vector_ids
 
 
 def do_lda(num_topics, passes, iterations, chunksize, tfidf, wiki_path=None):
@@ -60,11 +72,12 @@ def do_lda(num_topics, passes, iterations, chunksize, tfidf, wiki_path=None):
         model_name += 'wiki_'
 
     logging.info('Performing LDA on user corpus...')
-    model, vectors = perform_lda(dictionary=dictionary, corpus=corpus, num_topics=num_topics, passes=passes,
-                                 iterations=iterations, chunksize=chunksize, wiki_path=wiki_path)
+    model, vectors, ids = perform_lda(dictionary=dictionary, corpus=corpus, num_topics=num_topics, passes=passes,
+                                      iterations=iterations, chunksize=chunksize, wiki_path=wiki_path)
     model.print_topics(topics=num_topics, topn=10)
     model.save('data/model/' + model_name + str(num_topics) + '.lda')
     enpickle(vectors, 'data/vector/' + model_name + str(num_topics) + '.pkl')
+    enpickle(ids, 'data/vector/ids.pkl')
 
 
 if __name__ == '__main__':
@@ -73,8 +86,8 @@ if __name__ == '__main__':
     passes = 10
     iterations = 50
     chunksize = 2000
-    # wiki_path = 'data/processed/wikis.pkl'
-    wiki_path = None
+    wiki_path = 'data/processed/wikis.pkl'
+    # wiki_path = None
 
     # logging
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.DEBUG)

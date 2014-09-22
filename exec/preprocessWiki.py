@@ -18,7 +18,7 @@ __author__ = 'kensk8er'
 def crawl_wiki(model_path):
     engine = Wikipedia(license=None, throttle=1.0, language='en')
     wikis = {}
-    keywords = get_keywords(model_path=model_path)
+    keywords = get_keywords(model_path=model_path, threshold=0.001)
     for keyword in keywords:
         stop = False
         while stop is False:
